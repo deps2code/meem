@@ -16,6 +16,27 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Payload CMS content
+
+The homepage reads content from a Payload CMS global named `site-content`:
+
+```txt
+PAYLOAD_CMS_URL=http://localhost:3001
+PAYLOAD_CMS_TOKEN=optional-read-token
+PAYLOAD_CMS_REVALIDATE_SECONDS=300
+```
+
+Create the global at `/api/globals/site-content` with these top-level groups:
+
+- `site`: `name`, `email`, and `social.github`, `social.twitter`, `social.linkedin`
+- `hero`: `title`, `instruction`
+- `about`: `eyebrow`, `heading`, `paragraphs`
+- `music`: `eyebrow`, `quote`, `byline`, `ctaLabel`, `ctaHref`, `trackTitle`, `artist`, `album`, `spotifyHref`, `elapsed`, `duration`, `progressPercent`, `playlistTitleLines`, `previewLabel`, `saveLabel`
+- `work`: `eyebrow`, `heading`, `description`, `projects` with `name`, `description`, `tags`, `href`
+- `contact`: `eyebrow`, `heading`, `description`, `footer`
+
+If `PAYLOAD_CMS_URL` is not configured, or Payload is unavailable, the site uses the fallback content in `src/lib/site-content.ts`.
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.

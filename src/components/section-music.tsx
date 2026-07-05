@@ -8,28 +8,33 @@ import {
   SkipForward,
   Volume2,
 } from "lucide-react";
+import type { MusicContent } from "@/lib/site-content";
 
-export function SectionMusic() {
+type SectionMusicProps = {
+  content: MusicContent;
+};
+
+export function SectionMusic({ content }: SectionMusicProps) {
   return (
     <section className="relative mx-auto w-full max-w-2xl overflow-hidden px-6 py-24 md:py-32">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_70%_30%,color-mix(in_oklch,var(--accent)_16%,transparent),transparent_48%)]" />
       <div className="relative">
         <div>
           <p className="text-sm font-medium uppercase tracking-widest text-accent">
-            Music
+            {content.eyebrow}
           </p>
           <h2 className="mt-8 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-            &ldquo;Music is life itself.&rdquo;
+            &ldquo;{content.quote}&rdquo;
           </h2>
           <p className="mt-6 max-w-xl text-lg leading-8 text-muted-foreground">
-            Louis Armstrong
+            {content.byline}
           </p>
           <div className="mt-10">
             <a
-              href="#contact"
+              href={content.ctaHref}
               className="inline-flex h-12 items-center justify-center rounded-full bg-foreground px-7 text-sm font-semibold text-background shadow-sm transition hover:opacity-85"
             >
-              Start listening
+              {content.ctaLabel}
             </a>
           </div>
         </div>
@@ -44,10 +49,10 @@ export function SectionMusic() {
                 Now Playing
               </p>
               <h3 className="mt-3 truncate text-2xl font-bold text-foreground sm:text-3xl">
-                Helaf El Amar
+                {content.trackTitle}
               </h3>
               <p className="mt-1 text-base text-muted-foreground sm:text-lg">
-                George Wassouf · El Hawa Sultan
+                {content.artist} · {content.album}
               </p>
             </div>
             <button
@@ -60,7 +65,7 @@ export function SectionMusic() {
           </div>
 
           <a
-            href="https://open.spotify.com/"
+            href={content.spotifyHref}
             target="_blank"
             rel="noopener noreferrer"
             className="mx-auto mt-8 flex h-11 w-fit items-center justify-center rounded-full border border-border bg-background/80 px-7 text-xs font-bold uppercase tracking-[0.28em] text-foreground shadow-sm transition hover:bg-muted"
@@ -70,11 +75,14 @@ export function SectionMusic() {
 
           <div className="mt-12">
             <div className="flex justify-between text-sm font-medium text-muted-foreground">
-              <span>01:12</span>
-              <span>6:40</span>
+              <span>{content.elapsed}</span>
+              <span>{content.duration}</span>
             </div>
             <div className="mt-4 h-2 rounded-full bg-muted">
-              <div className="h-full w-[34%] rounded-full bg-foreground" />
+              <div
+                className="h-full rounded-full bg-foreground"
+                style={{ width: `${content.progressPercent}%` }}
+              />
             </div>
           </div>
 
@@ -105,20 +113,21 @@ export function SectionMusic() {
           <div className="mt-10 rounded-[1.5rem] bg-[#0c6590] p-4 text-white shadow-xl sm:p-5">
             <div className="flex gap-4 sm:gap-5">
               <div className="flex size-24 shrink-0 items-center justify-center rounded-xl bg-[#3a9bcc] text-center text-xs font-black uppercase leading-4 tracking-wide sm:size-28 sm:text-sm">
-                Best of
-                <br />
-                George
-                <br />
-                Wassouf
+                {content.playlistTitleLines.map((line) => (
+                  <span key={line}>
+                    {line}
+                    <br />
+                  </span>
+                ))}
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex justify-between gap-4">
                   <div>
                     <p className="truncate text-base font-bold sm:text-lg">
-                      Helaf El Amar
+                      {content.trackTitle}
                     </p>
                     <p className="mt-2 text-sm text-white/70">
-                      Preview · George Wassouf
+                      {content.previewLabel}
                     </p>
                   </div>
                   <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white text-[#0c6590]">
@@ -126,7 +135,7 @@ export function SectionMusic() {
                   </div>
                 </div>
                 <p className="mt-7 text-sm font-semibold text-white/85">
-                  + Save on Spotify
+                  {content.saveLabel}
                 </p>
               </div>
             </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import type { HeroContent } from "@/lib/site-content";
 
 const BUFFER_SIZE = 160;
 const AUTO_ROTATE_SPEED = 0.35; // rad/sec
@@ -19,7 +20,11 @@ function normalize(x: number, y: number, z: number) {
 
 const LIGHT_DIR = normalize(0.5, 0.5, 1.0);
 
-export function HeroSphere() {
+type HeroSphereProps = {
+  content: HeroContent;
+};
+
+export function HeroSphere({ content }: HeroSphereProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -185,10 +190,10 @@ export function HeroSphere() {
         }}
       />
       <h1 className="pointer-events-none absolute z-30 select-none text-6xl font-bold tracking-tight text-foreground sm:text-8xl md:text-9xl">
-        depster
+        {content.title}
       </h1>
       <p className="pointer-events-none absolute bottom-8 z-30 text-xs uppercase tracking-widest text-muted-foreground">
-        Click &amp; Drag to Rotate
+        {content.instruction}
       </p>
     </section>
   );

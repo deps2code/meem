@@ -1,42 +1,23 @@
-const projects = [
-  {
-    name: "Fieldnote",
-    description:
-      "A minimal, offline-first note-taking app for capturing quick thoughts on the go, with local-first sync and full-text search.",
-    tags: ["TypeScript", "React", "IndexedDB"],
-    href: "#",
-  },
-  {
-    name: "Driftboard",
-    description:
-      "A lightweight kanban board for small teams, built around keyboard-first navigation and real-time collaboration without the bloat of larger PM tools.",
-    tags: ["Next.js", "WebSockets", "Postgres"],
-    href: "#",
-  },
-  {
-    name: "Palette",
-    description:
-      "A color-palette generator and contrast checker for designers, exporting directly to CSS variables and Tailwind config.",
-    tags: ["TypeScript", "Canvas API", "Tailwind"],
-    href: "#",
-  },
-];
+import type { WorkContent } from "@/lib/site-content";
 
-export function SectionWork() {
+type SectionWorkProps = {
+  content: WorkContent;
+};
+
+export function SectionWork({ content }: SectionWorkProps) {
   return (
     <section className="mx-auto w-full max-w-2xl px-6 py-24 md:py-32">
       <p className="text-sm font-medium uppercase tracking-widest text-accent">
-        Work
+        {content.eyebrow}
       </p>
       <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-        Selected Work
+        {content.heading}
       </h2>
       <p className="mt-4 text-base leading-7 text-muted-foreground">
-        A few things I&apos;ve built recently — mostly small tools I wanted
-        for myself first.
+        {content.description}
       </p>
       <ul className="mt-10 divide-y divide-border border-t border-border">
-        {projects.map((project) => (
+        {content.projects.map((project) => (
           <li key={project.name} className="py-6">
             <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
               <h3 className="text-lg font-semibold text-foreground">

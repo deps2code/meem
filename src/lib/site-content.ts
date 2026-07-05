@@ -31,6 +31,7 @@ export type MusicContent = {
   artist: string;
   album: string;
   spotifyHref: string;
+  spotifyEmbedHref: string;
   elapsed: string;
   duration: string;
   progressPercent: number;
@@ -98,16 +99,18 @@ export const fallbackSiteContent: SiteContent = {
     byline: "Louis Armstrong",
     ctaLabel: "Start listening",
     ctaHref: "#contact",
-    trackTitle: "Helaf El Amar",
-    artist: "George Wassouf",
-    album: "El Hawa Sultan",
-    spotifyHref: "https://open.spotify.com/",
+    trackTitle: "Wish You Were Here",
+    artist: "Pink Floyd",
+    album: "Wish You Were Here",
+    spotifyHref: "https://open.spotify.com/track/6mFkJmJqdDVQ1REhVfGgd1",
+    spotifyEmbedHref:
+      "https://open.spotify.com/embed/track/6mFkJmJqdDVQ1REhVfGgd1?utm_source=generator",
     elapsed: "01:12",
     duration: "6:40",
     progressPercent: 34,
-    playlistTitleLines: ["Best of", "George", "Wassouf"],
-    previewLabel: "Preview - George Wassouf",
-    saveLabel: "+ Save on Spotify",
+    playlistTitleLines: ["Best of", "Pink", "Floyd"],
+    previewLabel: "Preview - Pink Floyd",
+    saveLabel: "Save on Spotify",
   },
   work: {
     eyebrow: "Work",

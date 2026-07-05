@@ -89,6 +89,7 @@ function normalizeMusic(value: unknown, fallback: MusicContent): MusicContent {
     artist: text(source.artist, fallback.artist),
     album: text(source.album, fallback.album),
     spotifyHref: text(source.spotifyHref, fallback.spotifyHref),
+    spotifyEmbedHref: text(source.spotifyEmbedHref, fallback.spotifyEmbedHref),
     elapsed: text(source.elapsed, fallback.elapsed),
     duration: text(source.duration, fallback.duration),
     progressPercent: Math.max(

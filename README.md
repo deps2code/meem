@@ -14,7 +14,7 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3002](http://localhost:3002) with your browser to see the result.
 
 ## Payload CMS content
 
@@ -31,7 +31,7 @@ Create the global at `/api/globals/site-content` with these top-level groups:
 - `site`: `name`, `email`, and `social.github`, `social.twitter`, `social.linkedin`
 - `hero`: `title`, `instruction`
 - `about`: `eyebrow`, `heading`, `paragraphs`
-- `music`: `eyebrow`, `quote`, `byline`, `ctaLabel`, `ctaHref`, `trackTitle`, `artist`, `album`, `spotifyHref`, `elapsed`, `duration`, `progressPercent`, `playlistTitleLines`, `previewLabel`, `saveLabel`
+- `music`: `eyebrow`, `quote`, `byline`, `ctaLabel`, `ctaHref`, `trackTitle`, `artist`, `album`, `spotifyHref`, `spotifyEmbedHref`, `elapsed`, `duration`, `progressPercent`, `playlistTitleLines`, `previewLabel`, `saveLabel`
 - `work`: `eyebrow`, `heading`, `description`, `projects` with `name`, `description`, `tags`, `href`
 - `contact`: `eyebrow`, `heading`, `description`, `footer`
 

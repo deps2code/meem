@@ -5,6 +5,7 @@ import { SectionAbout } from "@/components/section-about";
 import { SectionMusic } from "@/components/section-music";
 import { SectionWork } from "@/components/section-work";
 import { SectionContact } from "@/components/section-contact";
+import { FloatingMusicBar } from "@/components/floating-music-bar";
 import { getSiteContent } from "@/lib/payload-content";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -22,6 +23,7 @@ export default async function Home() {
   return (
     <>
       <SiteHeader />
+      <FloatingMusicBar content={content.music} />
       <main className="flex flex-1 flex-col">
         <HeroSphere content={content.hero} />
         <SectionAbout content={content.about} />

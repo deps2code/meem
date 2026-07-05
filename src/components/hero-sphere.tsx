@@ -192,9 +192,6 @@ export function HeroSphere({ content }: HeroSphereProps) {
       <h1 className="pointer-events-none absolute z-30 select-none text-6xl font-bold tracking-tight text-foreground sm:text-8xl md:text-9xl">
         {content.title}
       </h1>
-      <p className="pointer-events-none absolute bottom-8 z-30 text-xs uppercase tracking-widest text-muted-foreground">
-        {content.instruction}
-      </p>
     </section>
   );
 }

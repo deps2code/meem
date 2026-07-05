@@ -37,3 +37,23 @@ body {
   background: var(--background);
   color: var(--foreground);
 }
+
+.music-marquee {
+  animation: music-marquee 14s linear infinite;
+}
+
+@keyframes music-marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .music-marquee {
+    animation: none;
+  }
+}

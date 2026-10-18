@@ -121,7 +121,7 @@ export const fallbackSiteContent: SiteContent = {
         description:
           "An honest variant of chess with superpowers that may or may not help you get good at chess",
         tags: ["TypeScript", "React", "Go"],
-        href: "https://www.altchess.net",
+        href: "https://www.altchess.net/?invite=hikaru69",
       }
     ],
   },

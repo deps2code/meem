@@ -37,12 +37,21 @@ function record(value: unknown): Record<string, unknown> {
   return isRecord(value) ? value : {};
 }
 
+function href(value: unknown, fallback: string): string {
+  const raw = text(value, fallback);
+
+  // Keep anchors, root-relative paths and anything with a scheme (https:, mailto:, ...).
+  if (/^([#/]|[a-z][a-z0-9+.-]*:)/i.test(raw)) return raw;
+
+  return `https://${raw}`;
+}
+
 function normalizeSocialLinks(value: unknown, fallback: SocialLinks): SocialLinks {
   const source = record(value);
 
   return {
-    github: text(source.github, fallback.github),
-    linkedin: text(source.linkedin, fallback.linkedin),
+    github: href(source.github, fallback.github),
+    linkedin: href(source.linkedin, fallback.linkedin),
   };
 }
 
@@ -121,7 +130,7 @@ function normalizeProjects(value: unknown, fallback: ProjectContent[]): ProjectC
         name: text(project.name, fallbackProject.name),
         description: text(project.description, fallbackProject.description),
         tags: textArray(project.tags, fallbackProject.tags),
-        href: text(project.href, fallbackProject.href),
+        href: href(project.href, fallbackProject.href),
       };
     });
 

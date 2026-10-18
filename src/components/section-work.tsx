@@ -26,6 +26,10 @@ export function SectionWork({ content }: SectionWorkProps) {
                 </h3>
                 <a
                   href={project.href}
+                  {...(/^https?:/i.test(project.href) && {
+                    target: "_blank",
+                    rel: "noopener noreferrer",
+                  })}
                   className="text-sm font-medium text-accent hover:underline"
                 >
                   View project →

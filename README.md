@@ -28,7 +28,7 @@ PAYLOAD_CMS_REVALIDATE_SECONDS=300
 
 Create the global at `/api/globals/site-content` with these top-level groups:
 
-- `site`: `name`, `email`, and `social.github`, `social.twitter`, `social.linkedin`
+- `site`: `name`, `email`, and `social.github`, `social.linkedin`
 - `hero`: `title`, `instruction`
 - `about`: `eyebrow`, `heading`, `paragraphs`
 - `music`: `eyebrow`, `quote`, `byline`, `ctaLabel`, `ctaHref`, `trackTitle`, `artist`, `album`, `spotifyHref`, `spotifyEmbedHref`, `elapsed`, `duration`, `progressPercent`, `playlistTitleLines`, `previewLabel`, `saveLabel`

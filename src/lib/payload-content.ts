@@ -42,7 +42,6 @@ function normalizeSocialLinks(value: unknown, fallback: SocialLinks): SocialLink
 
   return {
     github: text(source.github, fallback.github),
-    twitter: text(source.twitter, fallback.twitter),
     linkedin: text(source.linkedin, fallback.linkedin),
   };
 }

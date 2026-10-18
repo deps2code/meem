@@ -1,6 +1,5 @@
 export type SocialLinks = {
   github: string;
-  twitter: string;
   linkedin: string;
 };
 
@@ -76,7 +75,6 @@ export const fallbackSiteContent: SiteContent = {
     email: "hello@example.com",
     social: {
       github: "https://github.com/depster",
-      twitter: "https://twitter.com/depster",
       linkedin: "https://linkedin.com/in/depster",
     },
   },

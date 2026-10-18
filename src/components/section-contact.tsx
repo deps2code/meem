@@ -1,4 +1,4 @@
-import { GithubIcon, LinkedinIcon, XIcon } from "@/components/icons";
+import { GithubIcon, LinkedinIcon } from "@/components/icons";
 import type { ContactContent, SiteIdentity } from "@/lib/site-content";
 
 type SectionContactProps = {
@@ -9,7 +9,6 @@ type SectionContactProps = {
 export function SectionContact({ content, site }: SectionContactProps) {
   const socialLinks = [
     { name: "GitHub", href: site.social.github, icon: GithubIcon },
-    { name: "Twitter", href: site.social.twitter, icon: XIcon },
     { name: "LinkedIn", href: site.social.linkedin, icon: LinkedinIcon },
   ];
 

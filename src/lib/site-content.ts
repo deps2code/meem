@@ -72,10 +72,10 @@ export type SiteContent = {
 export const fallbackSiteContent: SiteContent = {
   site: {
     name: "depster",
-    email: "hello@example.com",
+    email: "depscode@gmail.com",
     social: {
-      github: "https://github.com/depster",
-      linkedin: "https://linkedin.com/in/depster",
+      github: "https://github.com/deps2code",
+      linkedin: "https://linkedin.com/in/dpathak9",
     },
   },
   hero: {
@@ -86,9 +86,9 @@ export const fallbackSiteContent: SiteContent = {
     eyebrow: "About",
     heading: "Hi, I'm depster",
     paragraphs: [
-      "I'm a software developer who likes building small, focused tools and interfaces that feel good to use. Most of my time goes into web applications - React and TypeScript on the frontend, Node and various backends behind them - but I'm happiest when I'm tinkering with something just outside my day job: a weekend generative-art sketch, a CLI tool that automates some annoyance, or a weird little canvas experiment like the one at the top of this page.",
-      "I care about craft: clean type, calm color, and interfaces that don't get in their own way. When I'm not at the keyboard I'm usually reading, hiking, or trying to get a synthesizer to make a sound I actually like.",
-      "This site is a running log of what I'm building and a good place to reach me if you want to talk shop.",
+      "I'm a software developer who likes building small, focused tools and interfaces that feel good to use. Most of my time goes into web applications and various backends behind them, but I'm happiest when I'm tinkering with something just outside my day job: a weekend generative art sketch, a video clip edit, fun to play games or a simple little gradient and glass morphism experiment like the one at the top of this page",
+      "When I'm not at the keyboard I am usually at another one which is my Yamaha P125 keyboard. Otherwise I'm usually reading, hiking, or letting the moments tick away a dull day",
+      "This site is a running log of what I'm building and a good place to reach me if you want to talk shop",
     ],
   },
   music: {
@@ -112,31 +112,17 @@ export const fallbackSiteContent: SiteContent = {
   },
   work: {
     eyebrow: "Work",
-    heading: "Selected Work",
+    heading: "Selected projects",
     description:
-      "A few things I've built recently - mostly small tools I wanted for myself first.",
+      "A few things I've built or done recently",
     projects: [
       {
-        name: "Fieldnote",
+        name: "Altchess",
         description:
-          "A minimal, offline-first note-taking app for capturing quick thoughts on the go, with local-first sync and full-text search.",
-        tags: ["TypeScript", "React", "IndexedDB"],
-        href: "#",
-      },
-      {
-        name: "Driftboard",
-        description:
-          "A lightweight kanban board for small teams, built around keyboard-first navigation and real-time collaboration without the bloat of larger PM tools.",
-        tags: ["Next.js", "WebSockets", "Postgres"],
-        href: "#",
-      },
-      {
-        name: "Palette",
-        description:
-          "A color-palette generator and contrast checker for designers, exporting directly to CSS variables and Tailwind config.",
-        tags: ["TypeScript", "Canvas API", "Tailwind"],
-        href: "#",
-      },
+          "An honest variant of chess with superpowers that may or may not help you get good at chess",
+        tags: ["TypeScript", "React", "Go"],
+        href: "https://www.altchess.net",
+      }
     ],
   },
   contact: {

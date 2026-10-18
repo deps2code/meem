@@ -166,13 +166,18 @@ body {
 
 /* Music bar and section nav swap places once the hero scrolls away. The
    nav travels further and slower, and leaves later, so the two read as
-   layers at different depths. */
+   layers at different depths. The theme toggle steps down to make room for
+   the docked music button, on the same curve so the two move as one. */
 .music-dock {
   transition:
     width 350ms var(--ease-flow),
     padding 350ms var(--ease-flow),
     border-radius 350ms var(--ease-flow),
     translate 600ms var(--ease-flow);
+}
+
+.theme-dock {
+  transition: translate 600ms var(--ease-flow);
 }
 
 .nav-dock {
@@ -208,6 +213,7 @@ body {
   }
 
   .music-dock,
+  .theme-dock,
   .nav-dock {
     transition: none;
   }

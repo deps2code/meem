@@ -124,7 +124,7 @@ export function FloatingMusicBar({ content }: FloatingMusicBarProps) {
           onMouseLeave={() => setIsOpen(false)}
           className={`glass music-dock pointer-events-auto absolute left-0 top-0 overflow-hidden ${
             docked
-              ? "w-9 translate-x-[calc(100cqw-60px-100%)] translate-y-4 rounded-[18px] p-0 md:translate-x-[calc(100cqw-68px-100%)] md:translate-y-6"
+              ? "w-9 translate-x-[calc(100cqw-1rem-100%)] translate-y-4 rounded-[18px] p-0 md:translate-x-[calc(100cqw-1.5rem-100%)] md:translate-y-6"
               : `translate-x-[calc(50cqw-50%)] translate-y-4 rounded-[24px] sm:translate-y-5 ${
                   isExpanded
                     ? "w-[min(520px,calc(100vw-1.5rem))] p-0 sm:w-[min(520px,calc(100vw-8rem))]"

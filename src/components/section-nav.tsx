@@ -1,6 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState, type MouseEvent } from "react";
+import {
+  Briefcase,
+  House,
+  Mail,
+  Music,
+  User,
+  type LucideIcon,
+} from "lucide-react";
 import { useNavDocked } from "@/lib/use-nav-docked";
 
 export type SectionNavItem = {
@@ -10,6 +18,15 @@ export type SectionNavItem = {
 
 type SectionNavProps = {
   items: SectionNavItem[];
+};
+
+// Below md the labels collapse to icons so the docked nav fits beside the top-right buttons.
+const NAV_ICONS: Partial<Record<string, LucideIcon>> = {
+  home: House,
+  about: User,
+  music: Music,
+  work: Briefcase,
+  contact: Mail,
 };
 
 // Scroll duration grows with distance so multi-section jumps stay readable.
@@ -167,13 +184,16 @@ export function SectionNav({ items }: SectionNavProps) {
     <nav
       aria-label="Sections"
       data-docked={docked}
-      className={`glass nav-dock fixed left-1/2 top-0 z-50 max-w-[calc(100vw-1.5rem)] -translate-x-1/2 translate-y-[calc(100dvh-100%-1rem)] rounded-full p-1.5 sm:translate-y-[calc(100dvh-100%-1.5rem)] ${
-        docked ? "md:translate-y-[17px]" : ""
+      className={`glass nav-dock fixed left-1/2 top-0 z-50 max-w-[calc(100vw-1.5rem)] -translate-x-1/2 rounded-full p-1.5 ${
+        docked
+          ? "translate-y-[9px] md:translate-y-[17px]"
+          : "translate-y-[calc(100dvh-100%-1rem)] sm:translate-y-[calc(100dvh-100%-1.5rem)]"
       }`}
     >
-      <ul className="flex items-center gap-0.5 sm:gap-1">
+      <ul className="flex items-center gap-0.5 md:gap-1">
         {items.map(({ id, label }) => {
           const isActive = id === activeId;
+          const Icon = NAV_ICONS[id];
 
           return (
             <li key={id}>
@@ -181,13 +201,19 @@ export function SectionNav({ items }: SectionNavProps) {
                 href={`#${id}`}
                 onClick={(event) => handleClick(event, id)}
                 aria-current={isActive ? "location" : undefined}
-                className={`flex h-9 items-center whitespace-nowrap rounded-full px-2.5 text-[0.68rem] font-semibold uppercase tracking-[0.08em] transition-[background-color,color,transform] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] sm:px-4 sm:text-xs sm:tracking-[0.14em] ${
+                title={label}
+                className={`flex h-9 items-center justify-center whitespace-nowrap rounded-full text-[0.68rem] font-semibold uppercase tracking-[0.08em] transition-[background-color,color,transform] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] md:w-auto md:px-4 md:text-xs md:tracking-[0.14em] ${
+                  Icon ? "w-9" : "px-2.5"
+                } ${
                   isActive
                     ? "bg-foreground text-background"
                     : "text-muted-foreground hover:bg-muted hover:text-foreground"
                 }`}
               >
-                {label}
+                {Icon ? <Icon aria-hidden className="size-4 md:hidden" /> : null}
+                <span className={Icon ? "max-md:sr-only" : undefined}>
+                  {label}
+                </span>
               </a>
             </li>
           );

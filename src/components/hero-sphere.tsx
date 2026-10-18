@@ -6,6 +6,12 @@ import type { HeroContent } from "@/lib/site-content";
 
 const BUFFER_SIZE = 160;
 const AUTO_ROTATE_SPEED = 0.35; // rad/sec
+const CAMERA_Z = 2.2;
+const FOCAL_LENGTH = 1.2;
+// Silhouette radius of the unit sphere as a fraction of the canvas half-width.
+const SPHERE_SCREEN_RATIO = FOCAL_LENGTH / Math.sqrt(CAMERA_Z * CAMERA_Z - 1);
+// Drag hit area extends this far past the sphere's edge.
+const DRAG_MARGIN_PX = 20;
 type Rgb = [number, number, number];
 
 // Wisteria Silk reads on the dark scrim; Clear Hanada holds contrast on the light one.
@@ -31,6 +37,7 @@ type HeroSphereProps = {
 
 export function HeroSphere({ content }: HeroSphereProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const dragAreaRef = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
   const litColorRef = useRef<Rgb>(SPHERE_COLOR_DARK);
 
@@ -43,7 +50,8 @@ export function HeroSphere({ content }: HeroSphereProps) {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const dragArea = dragAreaRef.current;
+    if (!canvas || !dragArea) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
@@ -63,7 +71,7 @@ export function HeroSphere({ content }: HeroSphereProps) {
     const onPointerDown = (e: PointerEvent) => {
       isDragging.current = true;
       lastPos.current = { x: e.clientX, y: e.clientY };
-      canvas.setPointerCapture(e.pointerId);
+      dragArea.setPointerCapture(e.pointerId);
     };
     const onPointerMove = (e: PointerEvent) => {
       if (!isDragging.current) return;
@@ -77,7 +85,7 @@ export function HeroSphere({ content }: HeroSphereProps) {
       isDragging.current = false;
     };
 
-    canvas.addEventListener("pointerdown", onPointerDown);
+    dragArea.addEventListener("pointerdown", onPointerDown);
     window.addEventListener("pointermove", onPointerMove);
     window.addEventListener("pointerup", onPointerUp);
     window.addEventListener("pointercancel", onPointerUp);
@@ -103,7 +111,7 @@ export function HeroSphere({ content }: HeroSphereProps) {
 
       const rox = 0;
       const roy = 0;
-      const roz = 2.2;
+      const roz = CAMERA_Z;
 
       for (let y = 0; y < BUFFER_SIZE; y++) {
         const v = (y + 0.5 - BUFFER_SIZE / 2) / (BUFFER_SIZE / 2);
@@ -112,7 +120,7 @@ export function HeroSphere({ content }: HeroSphereProps) {
 
           let rdx = u;
           let rdy = v;
-          let rdz = -1.2;
+          let rdz = -FOCAL_LENGTH;
           const rdLen = Math.sqrt(rdx * rdx + rdy * rdy + rdz * rdz);
           rdx /= rdLen;
           rdy /= rdLen;
@@ -173,7 +181,7 @@ export function HeroSphere({ content }: HeroSphereProps) {
 
     return () => {
       cancelAnimationFrame(rafId);
-      canvas.removeEventListener("pointerdown", onPointerDown);
+      dragArea.removeEventListener("pointerdown", onPointerDown);
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerup", onPointerUp);
       window.removeEventListener("pointercancel", onPointerUp);
@@ -189,11 +197,21 @@ export function HeroSphere({ content }: HeroSphereProps) {
             "radial-gradient(ellipse at center, color-mix(in oklch, var(--accent) 45%, transparent) 0%, color-mix(in oklch, var(--accent) 12%, transparent) 45%, transparent 75%)",
         }}
       />
-      <canvas
-        ref={canvasRef}
-        className="relative z-10 aspect-square w-[88vmin] max-w-[680px] touch-none select-none"
-        style={{ imageRendering: "pixelated" }}
-      />
+      <div className="relative z-10 aspect-square w-[88vmin] max-w-[680px]">
+        <canvas
+          ref={canvasRef}
+          className="pointer-events-none block size-full select-none"
+          style={{ imageRendering: "pixelated" }}
+        />
+        {/* Circular drag target hugging the sphere so the rest of the hero still scrolls on touch. */}
+        <div
+          ref={dragAreaRef}
+          className="absolute left-1/2 top-1/2 aspect-square -translate-x-1/2 -translate-y-1/2 touch-none select-none rounded-full"
+          style={{
+            width: `calc(${SPHERE_SCREEN_RATIO * 100}% + ${DRAG_MARGIN_PX * 2}px)`,
+          }}
+        />
+      </div>
       <h1 className="pointer-events-none absolute z-30 select-none text-6xl font-bold tracking-tight text-foreground sm:text-8xl md:text-9xl">
         {content.title}
       </h1>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { useNavDocked } from "@/lib/use-nav-docked";
 
 export type SectionNavItem = {
@@ -12,31 +12,156 @@ type SectionNavProps = {
   items: SectionNavItem[];
 };
 
+// Scroll duration grows with distance so multi-section jumps stay readable.
+const SCROLL_BASE_MS = 550;
+const SCROLL_MS_PER_VIEWPORT = 220;
+const SCROLL_MAX_MS = 1600;
+
+// Fraction of the viewport height a section's top must pass to become active.
+const ACTIVE_LINE = 0.5;
+
+function easeInOutCubic(t: number) {
+  return t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2;
+}
+
+function getScrollTarget(section: HTMLElement) {
+  const scrollPadding =
+    parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+  const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+  const top = section.getBoundingClientRect().top + window.scrollY - scrollPadding;
+
+  return Math.min(Math.max(top, 0), maxScroll);
+}
+
 export function SectionNav({ items }: SectionNavProps) {
   const [activeId, setActiveId] = useState(items[0]?.id);
   const docked = useNavDocked();
+  // Section being scrolled to by a nav click; pins the active pill until arrival.
+  const targetIdRef = useRef<string | null>(null);
+  const cancelScrollRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     const sections = items
       .map((item) => document.getElementById(item.id))
       .filter((section): section is HTMLElement => section !== null);
 
-    // A section is active once it crosses the middle band of the viewport.
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-          }
+    let frame = 0;
+
+    const update = () => {
+      frame = 0;
+      if (targetIdRef.current || sections.length === 0) return;
+
+      const atBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 2;
+
+      // The last section may be too short to ever reach the active line.
+      if (atBottom) {
+        setActiveId(sections[sections.length - 1].id);
+        return;
+      }
+
+      const line = window.innerHeight * ACTIVE_LINE;
+      let current = sections[0];
+
+      for (const section of sections) {
+        if (section.getBoundingClientRect().top <= line) {
+          current = section;
         }
-      },
-      { rootMargin: "-45% 0px -45% 0px" },
-    );
+      }
 
-    sections.forEach((section) => observer.observe(section));
+      setActiveId(current.id);
+    };
 
-    return () => observer.disconnect();
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, [items]);
+
+  useEffect(() => () => cancelScrollRef.current?.(), []);
+
+  const scrollToSection = (id: string) => {
+    const section = document.getElementById(id);
+    if (!section) return;
+
+    cancelScrollRef.current?.();
+    targetIdRef.current = id;
+    setActiveId(id);
+    history.pushState(null, "", `#${id}`);
+
+    const start = window.scrollY;
+    const distance = Math.abs(getScrollTarget(section) - start);
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    if (reduceMotion || distance < 1) {
+      window.scrollTo({ top: getScrollTarget(section), behavior: "instant" });
+      targetIdRef.current = null;
+      return;
+    }
+
+    const duration = Math.min(
+      SCROLL_BASE_MS +
+        (distance / window.innerHeight) * SCROLL_MS_PER_VIEWPORT,
+      SCROLL_MAX_MS,
+    );
+    let startTime: number | null = null;
+    let frame = 0;
+
+    const stop = () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("wheel", stop);
+      window.removeEventListener("touchstart", stop);
+      window.removeEventListener("keydown", stop);
+      targetIdRef.current = null;
+      cancelScrollRef.current = null;
+      // Let the scroll-position tracker take over from wherever we stopped.
+      window.dispatchEvent(new Event("scroll"));
+    };
+
+    const step = (now: number) => {
+      startTime ??= now;
+      const progress = Math.min((now - startTime) / duration, 1);
+      // Re-measure every frame so late layout shifts don't throw off the landing.
+      const target = getScrollTarget(section);
+
+      window.scrollTo({
+        top: start + (target - start) * easeInOutCubic(progress),
+        behavior: "instant",
+      });
+
+      if (progress < 1) {
+        frame = requestAnimationFrame(step);
+      } else {
+        stop();
+      }
+    };
+
+    // Any manual scroll input hands control back to the user.
+    window.addEventListener("wheel", stop, { passive: true });
+    window.addEventListener("touchstart", stop, { passive: true });
+    window.addEventListener("keydown", stop);
+    cancelScrollRef.current = stop;
+    frame = requestAnimationFrame(step);
+  };
+
+  const handleClick = (event: MouseEvent<HTMLAnchorElement>, id: string) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+    event.preventDefault();
+    scrollToSection(id);
+  };
 
   return (
     <nav
@@ -54,6 +179,7 @@ export function SectionNav({ items }: SectionNavProps) {
             <li key={id}>
               <a
                 href={`#${id}`}
+                onClick={(event) => handleClick(event, id)}
                 aria-current={isActive ? "location" : undefined}
                 className={`flex h-9 items-center whitespace-nowrap rounded-full px-2.5 text-[0.68rem] font-semibold uppercase tracking-[0.08em] transition-[background-color,color,transform] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] sm:px-4 sm:text-xs sm:tracking-[0.14em] ${
                   isActive

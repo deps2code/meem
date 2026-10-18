@@ -3,6 +3,7 @@
 import { Pause, Play } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { MusicContent } from "@/lib/site-content";
+import { useNavDocked } from "@/lib/use-nav-docked";
 
 type FloatingMusicBarProps = {
   content: MusicContent;
@@ -52,6 +53,8 @@ function getSpotifyUri(value: string): string {
 export function FloatingMusicBar({ content }: FloatingMusicBarProps) {
   const [isPaused, setIsPaused] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+  const docked = useNavDocked();
+  const isExpanded = isOpen && !docked;
   const controllerEmbedRef = useRef<HTMLDivElement>(null);
   const controllerRef = useRef<SpotifyEmbedController | null>(null);
   const spotifyUri = useMemo(
@@ -115,78 +118,104 @@ export function FloatingMusicBar({ content }: FloatingMusicBarProps) {
 
   return (
     <>
-    <aside
-      onMouseLeave={() => setIsOpen(false)}
-      className={`fixed left-1/2 top-4 z-50 -translate-x-1/2 glass overflow-hidden rounded-[24px] transition-[width,padding,transform,opacity] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] sm:top-5 ${
-        isOpen
-          ? "w-[min(520px,calc(100vw-1.5rem))] p-0 sm:w-[min(520px,calc(100vw-8rem))]"
-          : "w-[min(19rem,calc(100vw-1.5rem))] p-1.5 sm:w-80"
-      }`}
-    >
-      <div
-        className={`relative overflow-hidden transition-[height,border-radius] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] ${
-          isOpen ? "h-[152px] rounded-[23px]" : "h-10 rounded-[18px]"
-        }`}
-      >
-        <div className="absolute inset-x-0 top-0 z-30 flex h-10 items-center gap-3 overflow-hidden px-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-foreground">
-          <button
-            type="button"
-            aria-label={isPaused ? "Play Spotify" : "Pause Spotify"}
-            aria-pressed={!isPaused}
-            onClick={togglePlayback}
-            className={`flex size-7 shrink-0 items-center justify-center rounded-full bg-foreground text-background transition-[transform,opacity] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:opacity-85 active:scale-[0.97] ${
-              isOpen ? "pointer-events-none scale-95 opacity-0" : ""
-            }`}
-          >
-            <Icon className="size-3.5 fill-current" />
-          </button>
-          <div
-            onMouseEnter={() => setIsOpen(true)}
-            onFocus={() => setIsOpen(true)}
-            tabIndex={0}
-            className={`flex min-w-0 flex-1 items-center gap-3 transition-[opacity,transform] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] ${
-              isOpen ? "pointer-events-none -translate-y-2 opacity-0" : ""
-            }`}
-          >
-            <p className="shrink-0 text-[0.63rem] text-muted-foreground">
-              Now playing
-            </p>
-            <div className="min-w-0 flex-1 overflow-hidden">
-              <div className="music-marquee flex min-w-max whitespace-nowrap">
-                <span className="pr-10">{songLabel}</span>
-                <span className="pr-10" aria-hidden="true">
-                  {songLabel}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          className={`absolute inset-0 block h-[152px] border-0 transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] [&>iframe]:m-0 [&>iframe]:block [&>iframe]:h-[152px] [&>iframe]:w-full ${
-            isOpen
-              ? "translate-y-0 opacity-100"
-              : "pointer-events-none translate-y-2 opacity-0"
+      {/* Full-width container so cqw units resolve against the viewport minus the scrollbar. */}
+      <div className="pointer-events-none fixed inset-x-0 top-0 z-50 [container-type:inline-size]">
+        <aside
+          onMouseLeave={() => setIsOpen(false)}
+          className={`glass music-dock pointer-events-auto absolute left-0 top-0 overflow-hidden ${
+            docked
+              ? "w-9 translate-x-[calc(100cqw-60px-100%)] translate-y-4 rounded-[18px] p-0 md:translate-x-[calc(100cqw-68px-100%)] md:translate-y-6"
+              : `translate-x-[calc(50cqw-50%)] translate-y-4 rounded-[24px] sm:translate-y-5 ${
+                  isExpanded
+                    ? "w-[min(520px,calc(100vw-1.5rem))] p-0 sm:w-[min(520px,calc(100vw-8rem))]"
+                    : "w-[min(19rem,calc(100vw-1.5rem))] p-1.5 sm:w-80"
+                }`
           }`}
         >
-          {isOpen ? (
-            <iframe
-              title={`${content.trackTitle} on Spotify`}
-              src={content.spotifyEmbedHref}
-              width="100%"
-              height="152"
-              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-              loading="lazy"
-              className="block h-[152px] w-full border-0"
-            />
-          ) : null}
-        </div>
+          <div
+            className={`relative overflow-hidden transition-[height,border-radius] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+              docked
+                ? "h-[34px] rounded-full"
+                : isExpanded
+                  ? "h-[152px] rounded-[23px]"
+                  : "h-10 rounded-[18px]"
+            }`}
+          >
+            <div
+              className={`absolute inset-x-0 top-0 z-30 flex items-center overflow-hidden text-xs font-semibold uppercase tracking-[0.18em] text-foreground transition-[height,padding,gap] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+                docked ? "h-[34px] gap-0 px-0" : "h-10 gap-3 px-2.5"
+              }`}
+            >
+              <button
+                type="button"
+                aria-label={isPaused ? "Play Spotify" : "Pause Spotify"}
+                aria-pressed={!isPaused}
+                onClick={togglePlayback}
+                className={`flex shrink-0 items-center justify-center rounded-full transition-[width,height,background-color,color,transform,opacity] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] active:scale-[0.97] ${
+                  docked
+                    ? "size-[34px] bg-transparent text-foreground hover:bg-muted"
+                    : "size-7 bg-foreground text-background hover:opacity-85"
+                } ${isExpanded ? "pointer-events-none scale-95 opacity-0" : ""}`}
+              >
+                <Icon
+                  className={`fill-current transition-[width,height] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+                    docked ? "size-4" : "size-3.5"
+                  }`}
+                />
+              </button>
+              <div
+                onMouseEnter={() => setIsOpen(true)}
+                onFocus={() => setIsOpen(true)}
+                tabIndex={docked ? -1 : 0}
+                aria-hidden={docked}
+                className={`flex min-w-0 flex-1 items-center gap-3 transition-[opacity,transform] ease-[cubic-bezier(0.4,0,0.2,1)] ${
+                  docked
+                    ? "pointer-events-none translate-x-3 opacity-0 duration-150"
+                    : isExpanded
+                      ? "pointer-events-none -translate-y-2 opacity-0 duration-200"
+                      : "duration-300 delay-300"
+                }`}
+              >
+                <p className="shrink-0 text-[0.63rem] text-muted-foreground">
+                  Now playing
+                </p>
+                <div className="min-w-0 flex-1 overflow-hidden">
+                  <div className="music-marquee flex min-w-max whitespace-nowrap">
+                    <span className="pr-10">{songLabel}</span>
+                    <span className="pr-10" aria-hidden="true">
+                      {songLabel}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className={`absolute inset-0 block h-[152px] border-0 transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] [&>iframe]:m-0 [&>iframe]:block [&>iframe]:h-[152px] [&>iframe]:w-full ${
+                isExpanded
+                  ? "translate-y-0 opacity-100"
+                  : "pointer-events-none translate-y-2 opacity-0"
+              }`}
+            >
+              {isExpanded ? (
+                <iframe
+                  title={`${content.trackTitle} on Spotify`}
+                  src={content.spotifyEmbedHref}
+                  width="100%"
+                  height="152"
+                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                  loading="lazy"
+                  className="block h-[152px] w-full border-0"
+                />
+              ) : null}
+            </div>
+          </div>
+        </aside>
       </div>
-    </aside>
-    <div
-      ref={controllerEmbedRef}
-      aria-hidden="true"
-      className="pointer-events-none fixed -left-[9999px] -top-[9999px] size-px overflow-hidden opacity-0 [&>iframe]:size-px"
-    />
+      <div
+        ref={controllerEmbedRef}
+        aria-hidden="true"
+        className="pointer-events-none fixed -left-[9999px] -top-[9999px] size-px overflow-hidden opacity-0 [&>iframe]:size-px"
+      />
     </>
   );
 }

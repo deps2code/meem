@@ -8,6 +8,8 @@
   --orchid-clear-wisteria: #9678ce;
   --orchid-clear-hanada: #4a3894;
 
+  --ease-flow: cubic-bezier(0.4, 0, 0.2, 1);
+
   --background: oklch(0.96 0.02 326);
   --foreground: oklch(0.22 0.06 290);
   --muted: oklch(1 0 0 / 0.45);
@@ -162,6 +164,25 @@ body {
   }
 }
 
+/* Music bar and section nav swap places once the hero scrolls away. The
+   nav travels further and slower, and leaves later, so the two read as
+   layers at different depths. */
+.music-dock {
+  transition:
+    width 350ms var(--ease-flow),
+    padding 350ms var(--ease-flow),
+    border-radius 350ms var(--ease-flow),
+    translate 600ms var(--ease-flow);
+}
+
+.nav-dock {
+  transition: translate 700ms var(--ease-flow);
+}
+
+.nav-dock[data-docked="true"] {
+  transition-delay: 90ms;
+}
+
 .music-marquee {
   animation: music-marquee 14s linear infinite;
 }
@@ -184,5 +205,10 @@ body {
   .music-marquee,
   .orchid-blob {
     animation: none;
+  }
+
+  .music-dock,
+  .nav-dock {
+    transition: none;
   }
 }

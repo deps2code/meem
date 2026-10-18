@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useNavDocked } from "@/lib/use-nav-docked";
 
 export type SectionNavItem = {
   id: string;
@@ -13,6 +14,7 @@ type SectionNavProps = {
 
 export function SectionNav({ items }: SectionNavProps) {
   const [activeId, setActiveId] = useState(items[0]?.id);
+  const docked = useNavDocked();
 
   useEffect(() => {
     const sections = items
@@ -39,7 +41,10 @@ export function SectionNav({ items }: SectionNavProps) {
   return (
     <nav
       aria-label="Sections"
-      className="glass fixed bottom-4 left-1/2 z-50 max-w-[calc(100vw-1.5rem)] -translate-x-1/2 rounded-full p-1.5 sm:bottom-6"
+      data-docked={docked}
+      className={`glass nav-dock fixed left-1/2 top-0 z-50 max-w-[calc(100vw-1.5rem)] -translate-x-1/2 translate-y-[calc(100dvh-100%-1rem)] rounded-full p-1.5 sm:translate-y-[calc(100dvh-100%-1.5rem)] ${
+        docked ? "md:translate-y-[17px]" : ""
+      }`}
     >
       <ul className="flex items-center gap-0.5 sm:gap-1">
         {items.map(({ id, label }) => {

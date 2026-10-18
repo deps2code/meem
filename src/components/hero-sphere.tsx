@@ -1,11 +1,16 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useTheme } from "next-themes";
 import type { HeroContent } from "@/lib/site-content";
 
 const BUFFER_SIZE = 160;
 const AUTO_ROTATE_SPEED = 0.35; // rad/sec
-const WAVE_COLOR: [number, number, number] = [231, 148, 201];
+type Rgb = [number, number, number];
+
+// Wisteria Silk reads on the dark scrim; Clear Hanada holds contrast on the light one.
+const SPHERE_COLOR_DARK: Rgb = [231, 148, 201];
+const SPHERE_COLOR_LIGHT: Rgb = [74, 56, 148];
 const BAYER_4X4 = [
   [0, 8, 2, 10],
   [12, 4, 14, 6],
@@ -26,6 +31,15 @@ type HeroSphereProps = {
 
 export function HeroSphere({ content }: HeroSphereProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { resolvedTheme } = useTheme();
+  const litColorRef = useRef<Rgb>(SPHERE_COLOR_DARK);
+
+  // Kept in a ref so a theme switch recolors the next frame without
+  // restarting the render loop or resetting the rotation.
+  useEffect(() => {
+    litColorRef.current =
+      resolvedTheme === "light" ? SPHERE_COLOR_LIGHT : SPHERE_COLOR_DARK;
+  }, [resolvedTheme]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -40,8 +54,6 @@ export function HeroSphere({ content }: HeroSphereProps) {
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-
-    const litColor = WAVE_COLOR;
 
     const rotX = { current: 0.3 };
     const rotY = { current: 0 };
@@ -139,7 +151,7 @@ export function HeroSphere({ content }: HeroSphereProps) {
 
           const idx = (y * BUFFER_SIZE + x) * 4;
           if (lit) {
-            const [r, g, bl] = litColor;
+            const [r, g, bl] = litColorRef.current;
             data[idx] = r;
             data[idx + 1] = g;
             data[idx + 2] = bl;

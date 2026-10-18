@@ -2,23 +2,41 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: oklch(0.99 0 0);
-  --foreground: oklch(0.15 0 0);
-  --muted: oklch(0.96 0.002 0);
-  --muted-foreground: oklch(0.48 0.005 0);
-  --border: oklch(0.90 0.002 0);
-  --accent: oklch(0.63 0.19 15);
-  --accent-foreground: oklch(0.99 0 0);
+  /* Orchid gradient stops */
+  --orchid-violet-haze: #fbeffb;
+  --orchid-wisteria-silk: #e794c9;
+  --orchid-clear-wisteria: #9678ce;
+  --orchid-clear-hanada: #4a3894;
+
+  --background: oklch(0.96 0.02 326);
+  --foreground: oklch(0.22 0.06 290);
+  --muted: oklch(1 0 0 / 0.45);
+  --muted-foreground: oklch(0.42 0.06 295);
+  --border: oklch(0.42 0.1 295 / 0.18);
+  --accent: oklch(0.41 0.14 287);
+  --accent-foreground: oklch(0.97 0.02 326);
+
+  --scrim: oklch(0.98 0.015 326 / 0.42);
+  --glass-bg: oklch(1 0 0 / 0.36);
+  --glass-border: oklch(1 0 0 / 0.6);
+  --glass-highlight: oklch(1 0 0 / 0.75);
+  --glass-shadow: 0 12px 40px oklch(0.41 0.14 287 / 0.16);
 }
 
 .dark {
-  --background: oklch(0.14 0.004 15);
-  --foreground: oklch(0.97 0 0);
-  --muted: oklch(0.20 0.006 15);
-  --muted-foreground: oklch(0.65 0.01 15);
-  --border: oklch(0.28 0.006 15);
-  --accent: oklch(0.68 0.20 15);
-  --accent-foreground: oklch(0.14 0 0);
+  --background: oklch(0.16 0.04 290);
+  --foreground: oklch(0.97 0.015 326);
+  --muted: oklch(1 0 0 / 0.08);
+  --muted-foreground: oklch(0.8 0.04 310);
+  --border: oklch(1 0 0 / 0.14);
+  --accent: oklch(0.77 0.12 342);
+  --accent-foreground: oklch(0.16 0.04 290);
+
+  --scrim: oklch(0.13 0.04 290 / 0.6);
+  --glass-bg: oklch(0.22 0.05 292 / 0.32);
+  --glass-border: oklch(1 0 0 / 0.14);
+  --glass-highlight: oklch(1 0 0 / 0.1);
+  --glass-shadow: 0 18px 60px oklch(0.08 0.04 290 / 0.45);
 }
 
 @theme inline {
@@ -33,9 +51,115 @@
   --font-mono: var(--font-geist-mono);
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 3rem;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
+}
+
+@utility glass {
+  background-color: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    inset 0 1px 0 0 var(--glass-highlight),
+    var(--glass-shadow);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  backdrop-filter: blur(24px) saturate(160%);
+}
+
+.orchid-flow {
+  background: linear-gradient(
+    135deg,
+    var(--orchid-violet-haze) 12.5%,
+    var(--orchid-wisteria-silk) 37.5%,
+    var(--orchid-clear-wisteria) 62.5%,
+    var(--orchid-clear-hanada) 87.5%
+  );
+}
+
+.orchid-blob {
+  position: absolute;
+  width: 80vmax;
+  height: 80vmax;
+  border-radius: 9999px;
+  will-change: transform;
+}
+
+.orchid-blob-1 {
+  top: -30vmax;
+  left: -25vmax;
+  background: radial-gradient(
+    circle,
+    var(--orchid-violet-haze) 0%,
+    transparent 65%
+  );
+  animation: orchid-drift-1 26s ease-in-out infinite alternate;
+}
+
+.orchid-blob-2 {
+  top: -10vmax;
+  right: -30vmax;
+  background: radial-gradient(
+    circle,
+    var(--orchid-wisteria-silk) 0%,
+    transparent 65%
+  );
+  animation: orchid-drift-2 32s ease-in-out infinite alternate;
+}
+
+.orchid-blob-3 {
+  bottom: -35vmax;
+  left: -10vmax;
+  background: radial-gradient(
+    circle,
+    var(--orchid-clear-wisteria) 0%,
+    transparent 65%
+  );
+  animation: orchid-drift-3 38s ease-in-out infinite alternate;
+}
+
+.orchid-blob-4 {
+  bottom: -30vmax;
+  right: -25vmax;
+  background: radial-gradient(
+    circle,
+    var(--orchid-clear-hanada) 0%,
+    transparent 65%
+  );
+  animation: orchid-drift-4 29s ease-in-out infinite alternate;
+}
+
+.orchid-noise {
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@keyframes orchid-drift-1 {
+  to {
+    transform: translate3d(30vw, 20vh, 0) scale(1.15);
+  }
+}
+
+@keyframes orchid-drift-2 {
+  to {
+    transform: translate3d(-35vw, 30vh, 0) scale(0.9);
+  }
+}
+
+@keyframes orchid-drift-3 {
+  to {
+    transform: translate3d(25vw, -30vh, 0) scale(1.2);
+  }
+}
+
+@keyframes orchid-drift-4 {
+  to {
+    transform: translate3d(-30vw, -25vh, 0) scale(1.1);
+  }
 }
 
 .music-marquee {
@@ -53,7 +177,12 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .music-marquee {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .music-marquee,
+  .orchid-blob {
     animation: none;
   }
 }

@@ -5,7 +5,7 @@ import type { HeroContent } from "@/lib/site-content";
 
 const BUFFER_SIZE = 160;
 const AUTO_ROTATE_SPEED = 0.35; // rad/sec
-const WAVE_COLOR: [number, number, number] = [74, 222, 128];
+const WAVE_COLOR: [number, number, number] = [231, 148, 201];
 const BAYER_4X4 = [
   [0, 8, 2, 10],
   [12, 4, 14, 6],
@@ -169,7 +169,7 @@ export function HeroSphere({ content }: HeroSphereProps) {
   }, []);
 
   return (
-    <section className="relative flex h-[100svh] w-full items-center justify-center overflow-hidden bg-background">
+    <section id="home" className="relative flex h-[100svh] w-full items-center justify-center overflow-hidden">
       <div
         className="pointer-events-none absolute inset-0"
         style={{
@@ -181,13 +181,6 @@ export function HeroSphere({ content }: HeroSphereProps) {
         ref={canvasRef}
         className="relative z-10 aspect-square w-[88vmin] max-w-[680px] touch-none select-none"
         style={{ imageRendering: "pixelated" }}
-      />
-      <div
-        className="pointer-events-none absolute inset-0 z-20"
-        style={{
-          background:
-            "radial-gradient(ellipse at center, transparent 40%, var(--background) 95%)",
-        }}
       />
       <h1 className="pointer-events-none absolute z-30 select-none text-6xl font-bold tracking-tight text-foreground sm:text-8xl md:text-9xl">
         {content.title}

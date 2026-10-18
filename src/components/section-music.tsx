@@ -16,8 +16,7 @@ type SectionMusicProps = {
 
 export function SectionMusic({ content }: SectionMusicProps) {
   return (
-    <section className="relative mx-auto w-full max-w-2xl overflow-hidden px-6 py-24 md:py-32">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_70%_30%,color-mix(in_oklch,var(--accent)_16%,transparent),transparent_48%)]" />
+    <section id="music" className="relative mx-auto w-full max-w-2xl px-6 py-24 md:py-32">
       <div className="relative">
         <div>
           <p className="text-sm font-medium uppercase tracking-widest text-accent">
@@ -39,7 +38,7 @@ export function SectionMusic({ content }: SectionMusicProps) {
           </div>
         </div>
 
-        <div className="mt-14 rounded-[2rem] border border-border bg-background/72 p-5 shadow-2xl shadow-black/20 backdrop-blur-2xl sm:p-8">
+        <div className="mt-14 glass rounded-[2rem] p-5 sm:p-8">
           <div className="flex items-start gap-4 sm:gap-5">
             <div className="relative size-20 shrink-0 overflow-hidden rounded-3xl bg-gradient-to-br from-muted via-background to-muted shadow-inner sm:size-24">
               <div className="absolute left-1/2 top-1/2 size-10 -translate-x-1/2 -translate-y-1/2 rounded-full bg-background/85 sm:size-11" />
@@ -68,7 +67,7 @@ export function SectionMusic({ content }: SectionMusicProps) {
             href={content.spotifyHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="mx-auto mt-8 flex h-11 w-fit items-center justify-center rounded-full border border-border bg-background/80 px-7 text-xs font-bold uppercase tracking-[0.28em] text-foreground shadow-sm transition hover:bg-muted"
+            className="mx-auto mt-8 flex h-11 w-fit items-center justify-center rounded-full glass px-7 text-xs font-bold uppercase tracking-[0.28em] text-foreground shadow-sm transition hover:bg-muted"
           >
             Open in Spotify
           </a>
@@ -110,9 +109,9 @@ export function SectionMusic({ content }: SectionMusicProps) {
             ))}
           </div>
 
-          <div className="mt-10 rounded-[1.5rem] bg-[#0c6590] p-4 text-white shadow-xl sm:p-5">
+          <div className="mt-10 rounded-[1.5rem] bg-[#4a3894] p-4 text-white shadow-xl sm:p-5">
             <div className="flex gap-4 sm:gap-5">
-              <div className="flex size-24 shrink-0 items-center justify-center rounded-xl bg-[#3a9bcc] text-center text-xs font-black uppercase leading-4 tracking-wide sm:size-28 sm:text-sm">
+              <div className="flex size-24 shrink-0 items-center justify-center rounded-xl bg-[#9678ce] text-center text-xs font-black uppercase leading-4 tracking-wide sm:size-28 sm:text-sm">
                 {content.playlistTitleLines.map((line) => (
                   <span key={line}>
                     {line}
@@ -130,7 +129,7 @@ export function SectionMusic({ content }: SectionMusicProps) {
                       {content.previewLabel}
                     </p>
                   </div>
-                  <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white text-[#0c6590]">
+                  <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white text-[#4a3894]">
                     <Play className="ml-0.5 size-5 fill-current" />
                   </div>
                 </div>

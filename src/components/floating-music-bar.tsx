@@ -117,7 +117,7 @@ export function FloatingMusicBar({ content }: FloatingMusicBarProps) {
     <>
     <aside
       onMouseLeave={() => setIsOpen(false)}
-      className={`fixed left-1/2 top-4 z-50 -translate-x-1/2 overflow-hidden rounded-[24px] border border-white/20 bg-background/58 shadow-[0_18px_60px_rgba(0,0,0,0.24)] backdrop-blur-2xl transition-[width,padding,transform,opacity] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] sm:top-5 ${
+      className={`fixed left-1/2 top-4 z-50 -translate-x-1/2 glass overflow-hidden rounded-[24px] transition-[width,padding,transform,opacity] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] sm:top-5 ${
         isOpen
           ? "w-[min(520px,calc(100vw-1.5rem))] p-0 sm:w-[min(520px,calc(100vw-8rem))]"
           : "w-[min(19rem,calc(100vw-1.5rem))] p-1.5 sm:w-80"

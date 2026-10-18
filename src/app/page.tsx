@@ -6,6 +6,7 @@ import { SectionMusic } from "@/components/section-music";
 import { SectionWork } from "@/components/section-work";
 import { SectionContact } from "@/components/section-contact";
 import { FloatingMusicBar } from "@/components/floating-music-bar";
+import { SectionNav } from "@/components/section-nav";
 import { getSiteContent } from "@/lib/payload-content";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -19,12 +20,20 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Home() {
   const content = await getSiteContent();
+  const navItems = [
+    { id: "home", label: "Home" },
+    { id: "about", label: content.about.eyebrow },
+    { id: "music", label: content.music.eyebrow },
+    { id: "work", label: content.work.eyebrow },
+    { id: "contact", label: content.contact.eyebrow },
+  ];
 
   return (
     <>
       <SiteHeader />
       <FloatingMusicBar content={content.music} />
-      <main className="flex flex-1 flex-col">
+      <SectionNav items={navItems} />
+      <main className="flex flex-1 flex-col pb-20">
         <HeroSphere content={content.hero} />
         <SectionAbout content={content.about} />
         <SectionMusic content={content.music} />
